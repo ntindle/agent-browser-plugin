@@ -94,7 +94,7 @@ function initR2Client(config: PluginConfig): S3Client | null {
 
   return new S3Client({
     region: "auto",
-    endpoint: `https://${config.r2.accountId}.r2.cloudflarestorage.com`,
+    endpoint: `https://${config.r2.accountId}${config.r2.jurisdiction ? "." + config.r2.jurisdiction : ""}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId, secretAccessKey },
   });
 }
@@ -169,7 +169,7 @@ function convertToGif(inputPath: string, outputPath: string): void {
 
 // Plugin registration
 export default function register(api: any) {
-  pluginConfig = api.config || {};
+  pluginConfig = api.config?.plugins?.entries?.["agent-browser-plugin"]?.config || api.config || {};
   s3Client = initR2Client(pluginConfig);
 
   // Ensure temp directory

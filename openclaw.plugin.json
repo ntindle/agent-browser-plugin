@@ -2,7 +2,7 @@
   "id": "agent-browser-plugin",
   "name": "Agent Browser",
   "description": "Browser automation with automatic screenshot/video upload for AI agents",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -22,6 +22,13 @@
           "publicDomain": {
             "type": "string",
             "description": "Public domain for R2 bucket (optional, defaults to r2.dev URL)"
+          },
+          "jurisdiction": {
+            "type": "string",
+            "description": "R2 jurisdiction (e.g. \"eu\" for EU buckets)",
+            "examples": [
+              "eu"
+            ]
           }
         }
       },
