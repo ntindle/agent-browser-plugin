@@ -16,8 +16,8 @@ on:
           - major
 
 permissions:
-  id-token: write
-  contents: write
+  id-token: write   # Required for npm OIDC
+  contents: write   # Required for pushing version commits
 
 jobs:
   publish:
@@ -47,13 +47,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       
+      # For workflow_dispatch: bump version
       - name: Bump version (manual trigger)
         if: github.event_name == 'workflow_dispatch'
         run: npm version ${{ inputs.version }} -m "Release %s"
       
+      # Publish using OIDC - no token needed!
       - name: Publish to npm
         run: npm publish --access public
       
+      # For workflow_dispatch: push version commit and create release
       - name: Push changes
         if: github.event_name == 'workflow_dispatch'
         run: |
