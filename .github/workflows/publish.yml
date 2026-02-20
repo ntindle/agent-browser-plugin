@@ -1,0 +1,67 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install dependencies
+        run: bun install
+      
+      - name: Run tests
+        run: bun test
+      
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Bump version (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm version ${{ inputs.version }} -m "Release %s"
+      
+      - name: Publish to npm (OIDC)
+        run: npm publish --provenance --access public
+      
+      - name: Push changes
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git push
+          git push --tags
+      
+      - name: Create GitHub release
+        if: github.event_name == 'workflow_dispatch'
+        run: gh release create $(git describe --tags --abbrev=0) --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
