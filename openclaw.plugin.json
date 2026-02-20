@@ -1,0 +1,99 @@
+{
+  "id": "agent-browser",
+  "name": "Agent Browser",
+  "description": "Browser automation with automatic screenshot/video upload for AI agents",
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "r2": {
+        "type": "object",
+        "description": "Cloudflare R2 upload settings (optional - if not set, returns local paths only)",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "description": "Cloudflare account ID"
+          },
+          "bucket": {
+            "type": "string",
+            "description": "R2 bucket name"
+          },
+          "publicDomain": {
+            "type": "string",
+            "description": "Public domain for R2 bucket (optional, defaults to r2.dev URL)"
+          }
+        }
+      },
+      "headless": {
+        "type": "boolean",
+        "default": true,
+        "description": "Run browser in headless mode"
+      },
+      "viewport": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "number",
+            "default": 1280
+          },
+          "height": {
+            "type": "number",
+            "default": 720
+          }
+        }
+      },
+      "gif": {
+        "type": "object",
+        "description": "GIF conversion settings",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Convert WebM recordings to GIF before upload"
+          }
+        }
+      },
+      "video": {
+        "type": "object",
+        "description": "Video processing settings",
+        "properties": {
+          "speedUpAfter": {
+            "type": "number",
+            "default": 60,
+            "description": "Speed up recordings longer than N seconds"
+          },
+          "maxSpeedup": {
+            "type": "number",
+            "default": 4,
+            "description": "Maximum speedup multiplier"
+          }
+        }
+      },
+      "maxConcurrent": {
+        "type": "number",
+        "default": 3,
+        "description": "Maximum concurrent browser sessions"
+      },
+      "idleTimeoutMs": {
+        "type": "number",
+        "default": 300000,
+        "description": "Auto-close idle sessions after N milliseconds"
+      }
+    }
+  },
+  "uiHints": {
+    "r2.accountId": {
+      "label": "R2 Account ID",
+      "placeholder": "abc123..."
+    },
+    "r2.bucket": {
+      "label": "R2 Bucket",
+      "placeholder": "my-bucket"
+    },
+    "r2.publicDomain": {
+      "label": "Public Domain",
+      "placeholder": "cdn.example.com"
+    }
+  }
+}

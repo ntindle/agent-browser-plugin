@@ -1,0 +1,45 @@
+{
+  "name": "@ntindle/agent-browser-plugin",
+  "version": "0.1.0",
+  "description": "OpenClaw plugin for agent-browser with R2 upload support",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "bun test",
+    "ci": "bun test",
+    "release": "npm whoami && bun run ci && npm version patch && npm publish --access public && git push && git push --tags && gh release create $(git describe --tags --abbrev=0) --generate-notes",
+    "release:minor": "npm whoami && bun run ci && npm version minor && npm publish --access public && git push && git push --tags && gh release create $(git describe --tags --abbrev=0) --generate-notes",
+    "release:major": "npm whoami && bun run ci && npm version major && npm publish --access public && git push && git push --tags && gh release create $(git describe --tags --abbrev=0) --generate-notes"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "keywords": [
+    "openclaw",
+    "plugin",
+    "agent-browser",
+    "browser-automation",
+    "screenshots",
+    "video-recording",
+    "r2",
+    "cloudflare"
+  ],
+  "author": "ntindle",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ntindle/agent-browser-plugin"
+  },
+  "peerDependencies": {
+    "openclaw": "*"
+  },
+  "dependencies": {
+    "agent-browser": "^0.12.0",
+    "@aws-sdk/client-s3": "^3.700.0"
+  },
+  "devDependencies": {
+    "@sinclair/typebox": "^0.32.35"
+  }
+}
