@@ -5,7 +5,7 @@
  * for screenshots and video recordings.
  */
 
-import { BrowserManager } from "agent-browser";
+import { BrowserManager } from "agent-browser/dist/browser.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { execSync } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
@@ -36,6 +36,11 @@ interface SessionState {
 
 // Session management
 const sessions = new Map<string, SessionState>();
+
+// Export for testing
+export function _testClearSessions() {
+  sessions.clear();
+}
 let s3Client: S3Client | null = null;
 let pluginConfig: PluginConfig = {};
 

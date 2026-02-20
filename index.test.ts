@@ -15,7 +15,7 @@ const mockBrowser = {
   getUrl: mock(() => Promise.resolve("https://example.com")),
 };
 
-mock.module("agent-browser", () => ({
+mock.module("agent-browser/dist/browser.js", () => ({
   BrowserManager: class {
     launch = mockBrowser.launch;
     navigate = mockBrowser.navigate;
@@ -42,7 +42,7 @@ mock.module("@aws-sdk/client-s3", () => ({
 }));
 
 // Import after mocks
-import register from "./index";
+import register, { _testClearSessions } from "./index";
 
 describe("agent-browser-plugin", () => {
   let registeredTools: Map<string, any>;
@@ -50,6 +50,7 @@ describe("agent-browser-plugin", () => {
   let mockApi: any;
 
   beforeEach(() => {
+    _testClearSessions();
     registeredTools = new Map();
     registeredServices = new Map();
 
