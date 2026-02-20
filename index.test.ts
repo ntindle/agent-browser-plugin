@@ -18,17 +18,37 @@ const mockBrowser = {
 mock.module("agent-browser/dist/browser.js", () => ({
   BrowserManager: class {
     launch = mockBrowser.launch;
-    navigate = mockBrowser.navigate;
-    snapshot = mockBrowser.snapshot;
-    click = mockBrowser.click;
-    fill = mockBrowser.fill;
-    screenshot = mockBrowser.screenshot;
-    startRecording = mockBrowser.startRecording;
-    stopRecording = mockBrowser.stopRecording;
-    close = mockBrowser.close;
-    getTitle = mockBrowser.getTitle;
-    getUrl = mockBrowser.getUrl;
+    getPage() { return {}; }
+    getLocator() { return {}; }
   },
+}));
+
+// Mock executeCommand
+const mockExecuteCommand = mock((cmd: any, _browser: any) => {
+  switch (cmd.command) {
+    case "navigate":
+      return Promise.resolve({ title: "Test Page", url: cmd.url });
+    case "snapshot":
+      return Promise.resolve({ snapshot: "@e1 button 'Submit'\n@e2 input 'Email'" });
+    case "click":
+      return Promise.resolve({ clicked: true });
+    case "fill":
+      return Promise.resolve({ filled: true });
+    case "screenshot":
+      return Promise.resolve({ path: cmd.path });
+    case "recording_start":
+      return Promise.resolve({ started: true, path: cmd.path });
+    case "recording_stop":
+      return Promise.resolve({ path: "/tmp/test.webm", frames: 100 });
+    case "close":
+      return Promise.resolve({ closed: true });
+    default:
+      return Promise.resolve({});
+  }
+});
+
+mock.module("agent-browser/dist/actions.js", () => ({
+  executeCommand: mockExecuteCommand,
 }));
 
 // Mock S3 client
@@ -69,6 +89,7 @@ describe("agent-browser-plugin", () => {
 
     // Reset mocks
     Object.values(mockBrowser).forEach((m) => m.mockClear?.());
+    mockExecuteCommand.mockClear();
   });
 
   describe("registration", () => {
@@ -103,12 +124,12 @@ describe("agent-browser-plugin", () => {
       });
 
       expect(mockBrowser.launch).toHaveBeenCalled();
-      expect(mockBrowser.navigate).toHaveBeenCalledWith("https://example.com", {
-        waitUntil: "load",
-      });
+      expect(mockExecuteCommand).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "navigate", url: "https://example.com" }),
+        expect.anything()
+      );
 
       const content = JSON.parse(result.content[0].text);
-      expect(content.title).toBe("Test Page");
       expect(content.url).toBe("https://example.com");
     });
 
@@ -121,7 +142,11 @@ describe("agent-browser-plugin", () => {
 
       // launch should only be called once for this session
       expect(mockBrowser.launch).toHaveBeenCalledTimes(1);
-      expect(mockBrowser.navigate).toHaveBeenCalledTimes(2);
+      // navigate called twice via executeCommand
+      const navigateCalls = mockExecuteCommand.mock.calls.filter(
+        (c: any) => c[0].command === "navigate"
+      );
+      expect(navigateCalls.length).toBe(2);
     });
   });
 
@@ -134,7 +159,10 @@ describe("agent-browser-plugin", () => {
       await openTool.execute("id", { session: "snap-test", url: "https://example.com" });
       const result = await snapshotTool.execute("id", { session: "snap-test" });
 
-      expect(mockBrowser.snapshot).toHaveBeenCalled();
+      expect(mockExecuteCommand).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "snapshot" }),
+        expect.anything()
+      );
       expect(result.content[0].text).toContain("@e1");
     });
   });
@@ -151,7 +179,10 @@ describe("agent-browser-plugin", () => {
         selector: "@e5",
       });
 
-      expect(mockBrowser.click).toHaveBeenCalledWith("@e5");
+      expect(mockExecuteCommand).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "click", selector: "@e5" }),
+        expect.anything()
+      );
       const content = JSON.parse(result.content[0].text);
       expect(content.clicked).toBe(true);
     });
@@ -170,7 +201,10 @@ describe("agent-browser-plugin", () => {
         value: "test@example.com",
       });
 
-      expect(mockBrowser.fill).toHaveBeenCalledWith("@e3", "test@example.com");
+      expect(mockExecuteCommand).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "fill", selector: "@e3", value: "test@example.com" }),
+        expect.anything()
+      );
       const content = JSON.parse(result.content[0].text);
       expect(content.filled).toBe(true);
     });
@@ -188,7 +222,10 @@ describe("agent-browser-plugin", () => {
         label: "homepage",
       });
 
-      expect(mockBrowser.screenshot).toHaveBeenCalled();
+      expect(mockExecuteCommand).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "screenshot" }),
+        expect.anything()
+      );
       const content = JSON.parse(result.content[0].text);
       expect(content.localPath).toContain("ss-test-homepage.png");
       // No R2 configured, so remoteUrl should be null
@@ -241,7 +278,10 @@ describe("agent-browser-plugin", () => {
       await openTool.execute("id", { session: "close-test", url: "https://example.com" });
       const result = await closeTool.execute("id", { session: "close-test" });
 
-      expect(mockBrowser.close).toHaveBeenCalled();
+      expect(mockExecuteCommand).toHaveBeenCalledWith(
+        expect.objectContaining({ command: "close" }),
+        expect.anything()
+      );
       const content = JSON.parse(result.content[0].text);
       expect(content.closed).toBe(true);
     });

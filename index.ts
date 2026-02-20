@@ -6,6 +6,7 @@
  */
 
 import { BrowserManager } from "agent-browser/dist/browser.js";
+import { executeCommand } from "agent-browser/dist/actions.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { execSync } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
@@ -182,13 +183,17 @@ export default function register(api: any) {
     },
     async execute(_id: string, params: any) {
       const session = await getSession(params.session, pluginConfig);
-      await session.browser.navigate(params.url, {
-        waitUntil: params.waitUntil ?? "load",
-      });
-      const title = await session.browser.getTitle();
-      const url = await session.browser.getUrl();
+      const result = await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "navigate",
+          url: params.url,
+          waitUntil: params.waitUntil ?? "load",
+        },
+        session.browser
+      );
       return {
-        content: [{ type: "text", text: JSON.stringify({ title, url }) }],
+        content: [{ type: "text", text: JSON.stringify(result) }],
       };
     },
   });
@@ -212,11 +217,16 @@ export default function register(api: any) {
     },
     async execute(_id: string, params: any) {
       const session = await getSession(params.session, pluginConfig);
-      const snapshot = await session.browser.snapshot({
-        interactive: params.interactive ?? true,
-      });
+      const result = await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "snapshot",
+          filter: params.interactive ?? true ? "interactive" : undefined,
+        },
+        session.browser
+      );
       return {
-        content: [{ type: "text", text: snapshot }],
+        content: [{ type: "text", text: result.snapshot || JSON.stringify(result) }],
       };
     },
   });
@@ -238,10 +248,16 @@ export default function register(api: any) {
     },
     async execute(_id: string, params: any) {
       const session = await getSession(params.session, pluginConfig);
-      await session.browser.click(params.selector);
-      const url = await session.browser.getUrl();
+      const result = await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "click",
+          selector: params.selector,
+        },
+        session.browser
+      );
       return {
-        content: [{ type: "text", text: JSON.stringify({ clicked: true, url }) }],
+        content: [{ type: "text", text: JSON.stringify(result) }],
       };
     },
   });
@@ -264,9 +280,17 @@ export default function register(api: any) {
     },
     async execute(_id: string, params: any) {
       const session = await getSession(params.session, pluginConfig);
-      await session.browser.fill(params.selector, params.value);
+      const result = await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "fill",
+          selector: params.selector,
+          value: params.value,
+        },
+        session.browser
+      );
       return {
-        content: [{ type: "text", text: JSON.stringify({ filled: true }) }],
+        content: [{ type: "text", text: JSON.stringify(result) }],
       };
     },
   });
@@ -298,10 +322,15 @@ export default function register(api: any) {
       const filename = `${params.session}-${label}.png`;
       const localPath = join(tempDir, filename);
 
-      await session.browser.screenshot({
-        path: localPath,
-        fullPage: params.fullPage ?? false,
-      });
+      const result = await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "screenshot",
+          path: localPath,
+          fullPage: params.fullPage ?? false,
+        },
+        session.browser
+      );
 
       const remoteUrl = await uploadToR2(localPath, filename, "image/png");
 
@@ -347,7 +376,14 @@ export default function register(api: any) {
       const filename = `${params.session}-${label}.webm`;
       const localPath = join(tempDir, filename);
 
-      await session.browser.startRecording(localPath);
+      await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "recording_start",
+          path: localPath,
+        },
+        session.browser
+      );
       session.recording = true;
       session.recordingPath = localPath;
 
@@ -382,7 +418,13 @@ export default function register(api: any) {
         };
       }
 
-      const result = await session.browser.stopRecording();
+      const result = await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "recording_stop",
+        },
+        session.browser
+      ) as any;
       session.recording = false;
 
       let finalPath = result.path;
@@ -448,7 +490,13 @@ export default function register(api: any) {
         };
       }
 
-      await session.browser.close();
+      await executeCommand(
+        {
+          id: Date.now().toString(),
+          command: "close",
+        },
+        session.browser
+      );
       sessions.delete(params.session);
 
       return {
