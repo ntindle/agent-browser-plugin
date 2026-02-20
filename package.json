@@ -1,6 +1,6 @@
 {
   "name": "@ntindle/agent-browser-plugin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "OpenClaw plugin for agent-browser with R2 upload support",
   "type": "module",
   "main": "index.ts",
