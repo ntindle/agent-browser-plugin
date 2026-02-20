@@ -39,7 +39,7 @@ const mockExecuteCommand = mock((cmd: any, _browser: any) => {
     case "recording_start":
       return Promise.resolve({ started: true, path: cmd.path });
     case "recording_stop":
-      return Promise.resolve({ path: "/tmp/test.webm", frames: 100 });
+      return Promise.resolve({ success: true, data: { path: "/tmp/test.webm", frames: 100 } });
     case "close":
       return Promise.resolve({ closed: true });
     default:

@@ -427,7 +427,7 @@ export default function register(api: any) {
       ) as any;
       session.recording = false;
 
-      let finalPath = result.path;
+      let finalPath = result.data?.path || session.recordingPath;
       let contentType = "video/webm";
 
       // Speed up if needed
@@ -456,7 +456,7 @@ export default function register(api: any) {
             text: JSON.stringify({
               localPath: finalPath,
               remoteUrl,
-              frames: result.frames,
+              frames: result.data?.frames,
               markdown: remoteUrl
                 ? contentType === "image/gif"
                   ? `![recording](${remoteUrl})`
