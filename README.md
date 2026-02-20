@@ -9,7 +9,7 @@ OpenClaw plugin that wraps [agent-browser](https://github.com/vercel-labs/agent-
 - **GIF conversion** via ffmpeg for GitHub embedding
 - **Device emulation** for mobile testing
 - **Session management** with idle cleanup
-- **Escape hatch** (`browser_advanced`) for 50+ raw actions
+- **Escape hatch** (`ab_advanced`) for 50+ raw actions
 
 ## Installation
 
@@ -23,40 +23,40 @@ openclaw plugins install @ntindle/agent-browser-plugin
 
 | Tool | Description |
 |------|-------------|
-| `browser_open` | Navigate to URL (creates session) |
-| `browser_navigate` | History: back, forward, reload |
-| `browser_snapshot` | Get accessibility tree with refs (@e1, @e2...) |
-| `browser_click` | Click element by ref or selector |
-| `browser_fill` | Fill input field |
-| `browser_close` | Close browser session |
+| `ab_open` | Navigate to URL (creates session) |
+| `ab_navigate` | History: back, forward, reload |
+| `ab_snapshot` | Get accessibility tree with refs (@e1, @e2...) |
+| `ab_click` | Click element by ref or selector |
+| `ab_fill` | Fill input field |
+| `ab_close` | Close browser session |
 
 ### Interaction & Query
 
 | Tool | Description |
 |------|-------------|
-| `browser_interact` | hover, focus, drag, scroll, type, press, select, check/uncheck, dblclick |
-| `browser_query` | gettext, isvisible, isenabled, ischecked, title, url, count |
+| `ab_interact` | hover, focus, drag, scroll, type, press, select, check/uncheck, dblclick |
+| `ab_query` | gettext, isvisible, isenabled, ischecked, title, url, count |
 
 ### Media
 
 | Tool | Description |
 |------|-------------|
-| `browser_screenshot` | Screenshot with optional device emulation, R2 upload |
-| `browser_record_start` | Start video recording |
-| `browser_record_stop` | Stop recording, convert to GIF (optional), upload to R2 |
+| `ab_screenshot` | Screenshot with optional device emulation, R2 upload |
+| `ab_record_start` | Start video recording |
+| `ab_record_stop` | Stop recording, convert to GIF (optional), upload to R2 |
 
 ### Settings & Tabs
 
 | Tool | Description |
 |------|-------------|
-| `browser_tabs` | Tab management: list, new, switch, close |
-| `browser_settings` | viewport size, device emulation |
+| `ab_tabs` | Tab management: list, new, switch, close |
+| `ab_settings` | viewport size, device emulation |
 
 ### Escape Hatch
 
 | Tool | Description |
 |------|-------------|
-| `browser_advanced` | Run any of 50+ actions. Call with no `action` param to see the list. |
+| `ab_advanced` | Run any of 50+ actions. Call with no `action` param to see the list. |
 
 ## Configuration
 
@@ -108,43 +108,43 @@ openclaw plugins install @ntindle/agent-browser-plugin
 
 ```
 # Basic browsing
-browser_open(session: "qa", url: "https://example.com")
-browser_snapshot(session: "qa")
-browser_click(session: "qa", selector: "@e2")
-browser_fill(session: "qa", selector: "@e3", value: "test@example.com")
+ab_open(session: "qa", url: "https://example.com")
+ab_snapshot(session: "qa")
+ab_click(session: "qa", selector: "@e2")
+ab_fill(session: "qa", selector: "@e3", value: "test@example.com")
 
 # Mobile testing
-browser_screenshot(session: "qa", label: "mobile-view", device: "iPhone 14")
+ab_screenshot(session: "qa", label: "mobile-view", device: "iPhone 14")
 
 # Advanced interactions
-browser_interact(session: "qa", action: "scroll", value: "down", amount: 500)
-browser_interact(session: "qa", action: "hover", selector: "@e5")
-browser_interact(session: "qa", action: "press", value: "Enter")
+ab_interact(session: "qa", action: "scroll", value: "down", amount: 500)
+ab_interact(session: "qa", action: "hover", selector: "@e5")
+ab_interact(session: "qa", action: "press", value: "Enter")
 
 # Query page state
-browser_query(session: "qa", action: "gettext", selector: "@e1")
-browser_query(session: "qa", action: "isvisible", selector: "#modal")
-browser_query(session: "qa", action: "title")
+ab_query(session: "qa", action: "gettext", selector: "@e1")
+ab_query(session: "qa", action: "isvisible", selector: "#modal")
+ab_query(session: "qa", action: "title")
 
 # Tabs
-browser_tabs(session: "qa", action: "new", url: "https://google.com")
-browser_tabs(session: "qa", action: "list")
-browser_tabs(session: "qa", action: "switch", index: 0)
+ab_tabs(session: "qa", action: "new", url: "https://google.com")
+ab_tabs(session: "qa", action: "list")
+ab_tabs(session: "qa", action: "switch", index: 0)
 
 # Recording
-browser_record_start(session: "qa", label: "walkthrough")
+ab_record_start(session: "qa", label: "walkthrough")
 # ... do stuff ...
-browser_record_stop(session: "qa")
+ab_record_stop(session: "qa")
   → { localPath: "/tmp/...", remoteUrl: "https://cdn.../...", markdown: "![recording](...)" }
 
 # Escape hatch for advanced actions
-browser_advanced(session: "qa")  # Lists all 50+ available actions
-browser_advanced(session: "qa", action: "wait", params: { selector: "#loading" })
-browser_advanced(session: "qa", action: "cookies_get", params: {})
-browser_advanced(session: "qa", action: "evaluate", params: { expression: "document.title" })
+ab_advanced(session: "qa")  # Lists all 50+ available actions
+ab_advanced(session: "qa", action: "wait", params: { selector: "#loading" })
+ab_advanced(session: "qa", action: "cookies_get", params: {})
+ab_advanced(session: "qa", action: "evaluate", params: { expression: "document.title" })
 
 # Cleanup
-browser_close(session: "qa")
+ab_close(session: "qa")
 ```
 
 ## Why This Plugin?

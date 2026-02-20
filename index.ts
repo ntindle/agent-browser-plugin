@@ -182,7 +182,7 @@ export default function register(api: any) {
 
   // browser_open - Navigate to URL
   api.registerTool({
-    name: "browser_open",
+    name: "ab_open",
     description: "Open a URL in the browser. Creates a new session if needed.",
     parameters: {
       type: "object",
@@ -209,7 +209,7 @@ export default function register(api: any) {
 
   // browser_navigate - History navigation
   api.registerTool({
-    name: "browser_navigate",
+    name: "ab_navigate",
     description: "Navigate browser history: back, forward, or reload the page",
     parameters: {
       type: "object",
@@ -231,7 +231,7 @@ export default function register(api: any) {
 
   // browser_snapshot - Get accessibility tree
   api.registerTool({
-    name: "browser_snapshot",
+    name: "ab_snapshot",
     description: "Get accessibility tree with element refs (@e1, @e2, etc.) for interacting with elements",
     parameters: {
       type: "object",
@@ -253,7 +253,7 @@ export default function register(api: any) {
 
   // browser_click - Click element
   api.registerTool({
-    name: "browser_click",
+    name: "ab_click",
     description: "Click an element by ref (@e5) or CSS selector",
     parameters: {
       type: "object",
@@ -275,7 +275,7 @@ export default function register(api: any) {
 
   // browser_fill - Fill input field
   api.registerTool({
-    name: "browser_fill",
+    name: "ab_fill",
     description: "Clear and fill an input field by ref or selector",
     parameters: {
       type: "object",
@@ -298,7 +298,7 @@ export default function register(api: any) {
 
   // browser_interact - Multiple interaction types
   api.registerTool({
-    name: "browser_interact",
+    name: "ab_interact",
     description: "Interact with elements: hover, focus, drag, scroll, type, press, select, check, uncheck, dblclick",
     parameters: {
       type: "object",
@@ -336,7 +336,7 @@ export default function register(api: any) {
 
   // browser_query - Get info/state from page
   api.registerTool({
-    name: "browser_query",
+    name: "ab_query",
     description: "Query page info: gettext, isvisible, isenabled, ischecked, title, url, count",
     parameters: {
       type: "object",
@@ -365,7 +365,7 @@ export default function register(api: any) {
 
   // browser_screenshot - Screenshot with optional device emulation
   api.registerTool({
-    name: "browser_screenshot",
+    name: "ab_screenshot",
     description: "Take a screenshot, optionally emulating a device first. Returns local path and R2 URL if configured.",
     parameters: {
       type: "object",
@@ -414,7 +414,7 @@ export default function register(api: any) {
 
   // browser_record_start - Start video recording
   api.registerTool({
-    name: "browser_record_start",
+    name: "ab_record_start",
     description: "Start recording the browser session to video",
     parameters: {
       type: "object",
@@ -448,7 +448,7 @@ export default function register(api: any) {
 
   // browser_record_stop - Stop video recording
   api.registerTool({
-    name: "browser_record_stop",
+    name: "ab_record_stop",
     description: "Stop recording, optionally convert to GIF, and upload to R2",
     parameters: {
       type: "object",
@@ -506,7 +506,7 @@ export default function register(api: any) {
 
   // browser_tabs - Tab management
   api.registerTool({
-    name: "browser_tabs",
+    name: "ab_tabs",
     description: "Manage browser tabs: list, new, switch, close",
     parameters: {
       type: "object",
@@ -532,7 +532,7 @@ export default function register(api: any) {
 
   // browser_settings - Viewport and device emulation
   api.registerTool({
-    name: "browser_settings",
+    name: "ab_settings",
     description: "Configure browser: viewport size or device emulation",
     parameters: {
       type: "object",
@@ -562,7 +562,7 @@ export default function register(api: any) {
 
   // browser_close - Close session
   api.registerTool({
-    name: "browser_close",
+    name: "ab_close",
     description: "Close the browser session and clean up",
     parameters: {
       type: "object",
@@ -586,7 +586,7 @@ export default function register(api: any) {
 
   // browser_advanced - Escape hatch for any action
   api.registerTool({
-    name: "browser_advanced",
+    name: "ab_advanced",
     description: "Advanced: Run any agent-browser action. Call with no action to see all 50+ available actions. Use other browser_* tools first.",
     parameters: {
       type: "object",
