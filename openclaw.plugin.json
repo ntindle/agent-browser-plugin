@@ -1,5 +1,5 @@
 {
-  "id": "agent-browser",
+  "id": "agent-browser-plugin",
   "name": "Agent Browser",
   "description": "Browser automation with automatic screenshot/video upload for AI agents",
   "version": "0.1.0",
