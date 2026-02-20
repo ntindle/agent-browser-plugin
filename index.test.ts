@@ -119,10 +119,10 @@ describe("agent-browser-plugin", () => {
       register(mockApi);
 
       const expectedTools = [
-        "browser_open", "browser_navigate", "browser_snapshot", "browser_click",
-        "browser_fill", "browser_interact", "browser_query", "browser_screenshot",
-        "browser_record_start", "browser_record_stop", "browser_tabs",
-        "browser_settings", "browser_close", "browser_advanced"
+        "ab_open", "ab_navigate", "ab_snapshot", "ab_click",
+        "ab_fill", "ab_interact", "ab_query", "ab_screenshot",
+        "ab_record_start", "ab_record_stop", "ab_tabs",
+        "ab_settings", "ab_close", "ab_advanced"
       ];
 
       for (const tool of expectedTools) {
@@ -137,10 +137,10 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_open", () => {
+  describe("ab_open", () => {
     it("creates session and navigates", async () => {
       register(mockApi);
-      const tool = registeredTools.get("browser_open");
+      const tool = registeredTools.get("ab_open");
 
       const result = await tool.execute("test-id", {
         session: "test-session",
@@ -155,11 +155,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_navigate", () => {
+  describe("ab_navigate", () => {
     it("supports back/forward/reload", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const navTool = registeredTools.get("browser_navigate");
+      const openTool = registeredTools.get("ab_open");
+      const navTool = registeredTools.get("ab_navigate");
 
       await openTool.execute("id", { session: "nav-test", url: "https://example.com" });
 
@@ -173,11 +173,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_snapshot", () => {
+  describe("ab_snapshot", () => {
     it("returns accessibility tree", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const snapshotTool = registeredTools.get("browser_snapshot");
+      const openTool = registeredTools.get("ab_open");
+      const snapshotTool = registeredTools.get("ab_snapshot");
 
       await openTool.execute("id", { session: "snap-test", url: "https://example.com" });
       const result = await snapshotTool.execute("id", { session: "snap-test" });
@@ -190,11 +190,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_interact", () => {
+  describe("ab_interact", () => {
     it("supports hover, focus, scroll, type, press", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const interactTool = registeredTools.get("browser_interact");
+      const openTool = registeredTools.get("ab_open");
+      const interactTool = registeredTools.get("ab_interact");
 
       await openTool.execute("id", { session: "interact-test", url: "https://example.com" });
 
@@ -221,11 +221,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_query", () => {
+  describe("ab_query", () => {
     it("queries page info", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const queryTool = registeredTools.get("browser_query");
+      const openTool = registeredTools.get("ab_open");
+      const queryTool = registeredTools.get("ab_query");
 
       await openTool.execute("id", { session: "query-test", url: "https://example.com" });
 
@@ -245,11 +245,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_screenshot", () => {
+  describe("ab_screenshot", () => {
     it("takes screenshot with device emulation", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const screenshotTool = registeredTools.get("browser_screenshot");
+      const openTool = registeredTools.get("ab_open");
+      const screenshotTool = registeredTools.get("ab_screenshot");
 
       await openTool.execute("id", { session: "ss-test", url: "https://example.com" });
       const result = await screenshotTool.execute("id", {
@@ -275,11 +275,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_tabs", () => {
+  describe("ab_tabs", () => {
     it("manages tabs", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const tabsTool = registeredTools.get("browser_tabs");
+      const openTool = registeredTools.get("ab_open");
+      const tabsTool = registeredTools.get("ab_tabs");
 
       await openTool.execute("id", { session: "tabs-test", url: "https://example.com" });
 
@@ -299,11 +299,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_settings", () => {
+  describe("ab_settings", () => {
     it("sets viewport and device", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const settingsTool = registeredTools.get("browser_settings");
+      const openTool = registeredTools.get("ab_open");
+      const settingsTool = registeredTools.get("ab_settings");
 
       await openTool.execute("id", { session: "settings-test", url: "https://example.com" });
 
@@ -323,11 +323,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_advanced", () => {
+  describe("ab_advanced", () => {
     it("lists actions when called with no action", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const advancedTool = registeredTools.get("browser_advanced");
+      const openTool = registeredTools.get("ab_open");
+      const advancedTool = registeredTools.get("ab_advanced");
 
       await openTool.execute("id", { session: "adv-test", url: "https://example.com" });
       const result = await advancedTool.execute("id", { session: "adv-test" });
@@ -340,8 +340,8 @@ describe("agent-browser-plugin", () => {
 
     it("executes arbitrary action with params", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const advancedTool = registeredTools.get("browser_advanced");
+      const openTool = registeredTools.get("ab_open");
+      const advancedTool = registeredTools.get("ab_advanced");
 
       await openTool.execute("id", { session: "adv-test2", url: "https://example.com" });
       await advancedTool.execute("id", {
@@ -360,9 +360,9 @@ describe("agent-browser-plugin", () => {
   describe("browser_record_start/stop", () => {
     it("starts and stops recording", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const startTool = registeredTools.get("browser_record_start");
-      const stopTool = registeredTools.get("browser_record_stop");
+      const openTool = registeredTools.get("ab_open");
+      const startTool = registeredTools.get("ab_record_start");
+      const stopTool = registeredTools.get("ab_record_stop");
 
       await openTool.execute("id", { session: "rec-test", url: "https://example.com" });
 
@@ -376,11 +376,11 @@ describe("agent-browser-plugin", () => {
     });
   });
 
-  describe("browser_close", () => {
+  describe("ab_close", () => {
     it("closes session", async () => {
       register(mockApi);
-      const openTool = registeredTools.get("browser_open");
-      const closeTool = registeredTools.get("browser_close");
+      const openTool = registeredTools.get("ab_open");
+      const closeTool = registeredTools.get("ab_close");
 
       await openTool.execute("id", { session: "close-test", url: "https://example.com" });
       const result = await closeTool.execute("id", { session: "close-test" });
@@ -395,7 +395,7 @@ describe("agent-browser-plugin", () => {
 
     it("returns error for unknown session", async () => {
       register(mockApi);
-      const closeTool = registeredTools.get("browser_close");
+      const closeTool = registeredTools.get("ab_close");
 
       const result = await closeTool.execute("id", { session: "nonexistent" });
       const content = JSON.parse(result.content[0].text);
@@ -407,7 +407,7 @@ describe("agent-browser-plugin", () => {
     it("enforces maxConcurrent limit", async () => {
       mockApi.config.maxConcurrent = 2;
       register(mockApi);
-      const tool = registeredTools.get("browser_open");
+      const tool = registeredTools.get("ab_open");
 
       await tool.execute("id1", { session: "s1", url: "https://a.com" });
       await tool.execute("id2", { session: "s2", url: "https://b.com" });
