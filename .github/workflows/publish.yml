@@ -51,8 +51,8 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: npm version ${{ inputs.version }} -m "Release %s"
       
-      - name: Publish to npm (OIDC)
-        run: npm publish --provenance --access public
+      - name: Publish to npm
+        run: npm publish --access public
       
       - name: Push changes
         if: github.event_name == 'workflow_dispatch'
