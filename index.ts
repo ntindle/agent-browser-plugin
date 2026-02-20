@@ -186,7 +186,7 @@ export default function register(api: any) {
       const result = await executeCommand(
         {
           id: Date.now().toString(),
-          command: "navigate",
+          action: "navigate",
           url: params.url,
           waitUntil: params.waitUntil ?? "load",
         },
@@ -220,7 +220,7 @@ export default function register(api: any) {
       const result = await executeCommand(
         {
           id: Date.now().toString(),
-          command: "snapshot",
+          action: "snapshot",
           filter: params.interactive ?? true ? "interactive" : undefined,
         },
         session.browser
@@ -251,7 +251,7 @@ export default function register(api: any) {
       const result = await executeCommand(
         {
           id: Date.now().toString(),
-          command: "click",
+          action: "click",
           selector: params.selector,
         },
         session.browser
@@ -283,7 +283,7 @@ export default function register(api: any) {
       const result = await executeCommand(
         {
           id: Date.now().toString(),
-          command: "fill",
+          action: "fill",
           selector: params.selector,
           value: params.value,
         },
@@ -325,7 +325,7 @@ export default function register(api: any) {
       const result = await executeCommand(
         {
           id: Date.now().toString(),
-          command: "screenshot",
+          action: "screenshot",
           path: localPath,
           fullPage: params.fullPage ?? false,
         },
@@ -379,7 +379,7 @@ export default function register(api: any) {
       await executeCommand(
         {
           id: Date.now().toString(),
-          command: "recording_start",
+          action: "recording_start",
           path: localPath,
         },
         session.browser
@@ -421,7 +421,7 @@ export default function register(api: any) {
       const result = await executeCommand(
         {
           id: Date.now().toString(),
-          command: "recording_stop",
+          action: "recording_stop",
         },
         session.browser
       ) as any;
@@ -493,7 +493,7 @@ export default function register(api: any) {
       await executeCommand(
         {
           id: Date.now().toString(),
-          command: "close",
+          action: "close",
         },
         session.browser
       );

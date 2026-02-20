@@ -25,7 +25,7 @@ mock.module("agent-browser/dist/browser.js", () => ({
 
 // Mock executeCommand
 const mockExecuteCommand = mock((cmd: any, _browser: any) => {
-  switch (cmd.command) {
+  switch (cmd.action) {
     case "navigate":
       return Promise.resolve({ title: "Test Page", url: cmd.url });
     case "snapshot":
@@ -125,7 +125,7 @@ describe("agent-browser-plugin", () => {
 
       expect(mockBrowser.launch).toHaveBeenCalled();
       expect(mockExecuteCommand).toHaveBeenCalledWith(
-        expect.objectContaining({ command: "navigate", url: "https://example.com" }),
+        expect.objectContaining({ action: "navigate", url: "https://example.com" }),
         expect.anything()
       );
 
@@ -144,7 +144,7 @@ describe("agent-browser-plugin", () => {
       expect(mockBrowser.launch).toHaveBeenCalledTimes(1);
       // navigate called twice via executeCommand
       const navigateCalls = mockExecuteCommand.mock.calls.filter(
-        (c: any) => c[0].command === "navigate"
+        (c: any) => c[0].action === "navigate"
       );
       expect(navigateCalls.length).toBe(2);
     });
@@ -160,7 +160,7 @@ describe("agent-browser-plugin", () => {
       const result = await snapshotTool.execute("id", { session: "snap-test" });
 
       expect(mockExecuteCommand).toHaveBeenCalledWith(
-        expect.objectContaining({ command: "snapshot" }),
+        expect.objectContaining({ action: "snapshot" }),
         expect.anything()
       );
       expect(result.content[0].text).toContain("@e1");
@@ -180,7 +180,7 @@ describe("agent-browser-plugin", () => {
       });
 
       expect(mockExecuteCommand).toHaveBeenCalledWith(
-        expect.objectContaining({ command: "click", selector: "@e5" }),
+        expect.objectContaining({ action: "click", selector: "@e5" }),
         expect.anything()
       );
       const content = JSON.parse(result.content[0].text);
@@ -202,7 +202,7 @@ describe("agent-browser-plugin", () => {
       });
 
       expect(mockExecuteCommand).toHaveBeenCalledWith(
-        expect.objectContaining({ command: "fill", selector: "@e3", value: "test@example.com" }),
+        expect.objectContaining({ action: "fill", selector: "@e3", value: "test@example.com" }),
         expect.anything()
       );
       const content = JSON.parse(result.content[0].text);
@@ -223,7 +223,7 @@ describe("agent-browser-plugin", () => {
       });
 
       expect(mockExecuteCommand).toHaveBeenCalledWith(
-        expect.objectContaining({ command: "screenshot" }),
+        expect.objectContaining({ action: "screenshot" }),
         expect.anything()
       );
       const content = JSON.parse(result.content[0].text);
@@ -279,7 +279,7 @@ describe("agent-browser-plugin", () => {
       const result = await closeTool.execute("id", { session: "close-test" });
 
       expect(mockExecuteCommand).toHaveBeenCalledWith(
-        expect.objectContaining({ command: "close" }),
+        expect.objectContaining({ action: "close" }),
         expect.anything()
       );
       const content = JSON.parse(result.content[0].text);
