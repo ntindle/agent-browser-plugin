@@ -173,7 +173,8 @@ export default function register(api: any) {
   s3Client = initR2Client(pluginConfig);
 
   // Ensure temp directory
-  const tempDir = join(tmpdir(), "agent-browser-plugin");
+  // Use /tmp/openclaw/ to comply with OpenClaw mediaLocalRoots security (CVE-2026-25475)
+  const tempDir = join(tmpdir(), "openclaw", "agent-browser-plugin");
   if (!existsSync(tempDir)) {
     mkdirSync(tempDir, { recursive: true });
   }
