@@ -46,7 +46,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      
+
+      # bun install may update bun.lock — commit it so npm version succeeds
+      - name: Commit lockfile changes
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: update lockfile"
+
       # For workflow_dispatch: bump version
       - name: Bump version (manual trigger)
         if: github.event_name == 'workflow_dispatch'
