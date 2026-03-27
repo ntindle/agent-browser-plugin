@@ -270,8 +270,8 @@ describe("agent-browser-plugin", () => {
         expect.anything()
       );
 
-      const content = JSON.parse(result.content[0].text);
-      expect(content.localPath).toContain("ss-test-mobile-view.png");
+      const text = result.content[0].text;
+      expect(text).toContain("ss-test-mobile-view.png");
     });
   });
 
@@ -371,8 +371,8 @@ describe("agent-browser-plugin", () => {
       expect(startContent.recording).toBe(true);
 
       const stopResult = await stopTool.execute("id", { session: "rec-test" });
-      const stopContent = JSON.parse(stopResult.content[0].text);
-      expect(stopContent.frames).toBe(100);
+      const stopText = stopResult.content[0].text;
+      expect(stopText).toContain("saved locally");
     });
   });
 

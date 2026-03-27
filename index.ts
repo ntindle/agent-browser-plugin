@@ -399,15 +399,14 @@ export default function register(api: any) {
       );
 
       const remoteUrl = await uploadToR2(localPath, filename, "image/png");
+      const markdown = remoteUrl ? `![${label}](${remoteUrl})` : null;
 
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({
-            localPath,
-            remoteUrl,
-            markdown: remoteUrl ? `![${label}](${remoteUrl})` : null,
-          }),
+          text: remoteUrl
+            ? `Screenshot captured and uploaded.\n\n${markdown}\n\nInclude the above markdown image in your report.`
+            : `Screenshot saved locally: ${localPath}\n\nR2 upload not configured — no public URL available.`,
         }],
       };
     },
@@ -489,17 +488,16 @@ export default function register(api: any) {
       const filename = finalPath?.split("/").pop() || "video.webm";
       const remoteUrl = await uploadToR2(finalPath, filename, contentType);
 
+      const markdown = remoteUrl
+        ? contentType === "image/gif" ? `![recording](${remoteUrl})` : `[recording](${remoteUrl})`
+        : null;
+
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({
-            localPath: finalPath,
-            remoteUrl,
-            frames: result.data?.frames,
-            markdown: remoteUrl
-              ? contentType === "image/gif" ? `![recording](${remoteUrl})` : `[🎬 Recording](${remoteUrl})`
-              : null,
-          }),
+          text: remoteUrl
+            ? `Recording saved and uploaded.\n\n${markdown}\n\nInclude the above markdown in your report.`
+            : `Recording saved locally: ${finalPath}\n\nR2 upload not configured — no public URL available.`,
         }],
       };
     },
